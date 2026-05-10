@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitNexus Index Gate"
+  short_description: "Refresh stale GitNexus indexes"
+  default_prompt: "Use $gitnexus-index-gate before calling GitNexus: run status, analyze automatically if stale or missing, verify again, then continue."
