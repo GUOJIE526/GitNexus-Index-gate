@@ -104,16 +104,16 @@ write_cursor_rule() {
 
   cat > "$dest" <<'RULE'
 ---
-description: Check and refresh GitNexus indexes before graph-aware code work.
+description: Check and refresh GitNexus indexes before every GitNexus use.
 globs: "**/*"
 alwaysApply: false
 ---
 
 # GitNexus Index Gate
 
-Use this rule before calling GitNexus MCP tools, GitNexus CLI commands, code graph search, impact analysis, route mapping, refactoring helpers, or architecture-aware implementation.
+Use this rule every time before calling GitNexus MCP tools, GitNexus CLI commands, code graph search, impact analysis, route mapping, refactoring helpers, or architecture-aware implementation.
 
-GitNexus indexes a specific git commit. After a new commit, pull, merge, rebase, or branch switch, the graph can be stale. Before using GitNexus MCP or CLI-backed intelligence, check `npx gitnexus status`. Continue only when the index is current and the indexed/current commits match. If the index is stale, missing, corrupt, or mismatched, run `npx gitnexus analyze`, then verify with `npx gitnexus status` again.
+GitNexus indexes a specific git commit. Do not wait until a git operation is observed; new commits, pulls, merges, rebases, and branch switches are common stale-index causes, but the trigger is any upcoming GitNexus MCP or CLI use. Before using GitNexus MCP or CLI-backed intelligence, check `npx gitnexus status`. Continue only when the index is current and the indexed/current commits match. If the index is stale, missing, corrupt, or mismatched, run `npx gitnexus analyze`, then verify with `npx gitnexus status` again.
 
 For repos that also use OpenSpec, inspect `openspec/` after the GitNexus gate passes. Use the active OpenSpec proposal, design, requirements, and tasks as the change contract. Use GitNexus query/context/impact data to locate affected modules and consumers before editing. After editing, run relevant tests and update OpenSpec verification/task notes.
 

@@ -1,21 +1,21 @@
 ---
 name: gitnexus-index-gate
-description: Before an agent uses GitNexus MCP or CLI intelligence, check whether the repository index is stale after new commits, pulls, merges, or branch switches. Run gitnexus status first, automatically run gitnexus analyze when the index is stale or missing, verify status again, then continue with GitNexus or OpenSpec-backed work.
+description: Always run before an agent calls GitNexus MCP or CLI intelligence. Check gitnexus status every time, automatically run gitnexus analyze when the index is stale or missing, verify status again, then continue with GitNexus or OpenSpec-backed work.
 ---
 
 # GitNexus Index Gate
 
 ## When to Use
 
-Use this skill immediately before an agent calls GitNexus MCP tools, GitNexus CLI commands, graph-aware search, impact analysis, route mapping, context lookup, refactoring helpers, or any workflow that depends on GitNexus' indexed repository state.
+Use this skill every time immediately before an agent calls GitNexus MCP tools, GitNexus CLI commands, graph-aware search, impact analysis, route mapping, context lookup, refactoring helpers, or any workflow that depends on GitNexus' indexed repository state.
 
-Primary purpose: GitNexus indexes a specific git commit. After a new commit, pull, merge, rebase, or branch switch, the current working commit can differ from the indexed commit. Agents must not trust the graph until `gitnexus status` confirms the index is current.
+Primary purpose: GitNexus indexes a specific git commit, so agents must not trust the graph until `gitnexus status` confirms the index is current. Do not wait until the agent observes a git operation. New commits, pulls, merges, rebases, and branch switches are common reasons for stale indexes, but they are not required triggers. The trigger is any upcoming GitNexus MCP or CLI use.
 
 If the repo also uses OpenSpec, run this GitNexus gate first, then use the fresh graph to ground OpenSpec proposal, design, task, implementation, and verification work.
 
 ## Required Preflight
 
-Run the GitNexus gate immediately before any GitNexus MCP or CLI-backed code intelligence workflow.
+Run the GitNexus gate immediately before every GitNexus MCP or CLI-backed code intelligence workflow.
 
 1. From anywhere inside the target git repo, check freshness with:
 
@@ -33,7 +33,7 @@ Run the GitNexus gate immediately before any GitNexus MCP or CLI-backed code int
 4. Run `npx gitnexus status` again. Continue with the requested GitNexus workflow only after the final status is current.
 5. If the final status is still stale, or MCP tools still warn about stale data after a successful analyze, tell the user that the GitNexus MCP server may need a restart/reload before its in-memory index catches up.
 
-Only after this gate passes should the agent call GitNexus query/context/impact/route/shape tools.
+Only after this gate passes should the agent call GitNexus query/context/impact/route/shape tools. Do not skip the gate because a previous turn checked status; re-check when a new GitNexus call is about to happen.
 
 ## Helper Script
 

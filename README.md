@@ -1,8 +1,8 @@
 # GitNexus Index Gate Agent Skill
 
-Portable agent skill for repositories that use GitNexus as a code knowledge graph. Its main job is to make agents check and refresh the GitNexus index automatically before they use GitNexus.
+Portable agent skill for repositories that use GitNexus as a code knowledge graph. Its main job is to make agents check and refresh the GitNexus index automatically every time before they use GitNexus.
 
-Why this exists: GitNexus indexes a specific git commit. When a project gets a new commit, pull, merge, rebase, or branch switch, the existing index can become stale until someone runs `gitnexus analyze` again. This skill turns that manual step into an agent preflight.
+Why this exists: GitNexus indexes a specific git commit, so an agent should confirm index freshness before every GitNexus MCP or CLI call. New commits, pulls, merges, rebases, and branch switches are common causes of stale indexes, but the skill is not triggered only by git operations. The trigger is always "the agent is about to use GitNexus."
 
 The canonical skill lives at:
 
@@ -14,7 +14,7 @@ It can be installed into agents that support `SKILL.md` folders, or converted in
 
 ## What It Does
 
-- Makes agents run `npx gitnexus status` before GitNexus MCP/CLI work.
+- Makes agents run `npx gitnexus status` before every GitNexus MCP/CLI use.
 - Detects stale, missing, corrupt, nonzero, or commit-mismatched index states.
 - Automatically rebuilds stale or missing indexes with `npx gitnexus analyze`.
 - Verifies `npx gitnexus status` again before the agent continues.
